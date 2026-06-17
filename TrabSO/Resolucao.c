@@ -4,7 +4,7 @@
 #define _WINSOCK_DEPRECATE_NO_WARNINGS 1
 #define HAVE_STRUCT_TIMESPEC 
 
-#include <ptherad.h>
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -45,9 +45,42 @@ typedef struct {
 	int *macrobloco_atual;
 	int *contador_primos;
 	pthread_mutex_t *mutex_compartilhado;
-	pthread_mutex_t* mutex_indice;
+	pthread_mutex_t *mutex_indice;
 } thread_parametros;
 
-int main() {
+int **aloca_grade_dados(int linhas, int colunas) {
+	//aloca espaço para as linhas
+	int **matriz = (int **)malloc(linhas * sizeof(int *));
+	if (matriz == NULL) {
+		printf("Erro ao alocar memória para as linhas da matriz.\n");
+		exit(1);
+		}
+	for (int i = 0; i < linhas; i++) {
+		//aloca espaço para as colunas
+		(matriz)[i] = (int *)malloc(colunas * sizeof(int));
+		if (matriz == NULL) {
+			printf("Erro ao alocar memória para as linhas da matriz.\n");
+			exit(1);
+			}	
+		for (int j = 0; j < colunas; j++) {
+			(matriz)[i][j] = rand() % LIMITE_NUMB;
+		}
+	}
+	srand(SEED);
 
+	for (int k = 0; k < TAM_LINHAS; k++) {
+		for (int l = 0; l < TAM_COLUNAS; l++) {
+			(matriz)[k][l] = rand() % LIMITE_NUMB;
+		}
+	}
+
+	return matriz;
+}
+
+int main() {
+	printf("olá, mundo@");
+
+	aloca_grade_dados(TAM_LINHAS, TAM_COLUNAS);
+
+	return 0;
 }

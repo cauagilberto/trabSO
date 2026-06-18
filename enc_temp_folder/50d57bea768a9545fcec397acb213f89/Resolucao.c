@@ -44,7 +44,7 @@ pthread_mutex_t *mutex_indice;
 
 int **gera_aloca_matriz(int linhas, int colunas) {
 	//aloca espaço para as linhas
-	matriz = (int **)malloc(linhas * sizeof(int *));
+	int **matriz = (int **)malloc(linhas * sizeof(int *));
 	if (matriz == NULL) {
 		//verifica se o espaço foi alocado
 		fprintf(stderr, "Erro ao alocar memória para as linhas da matriz.\n");
@@ -109,12 +109,12 @@ void *trabalho_da_thread() {
 	int quantidade_macroblocos = (TAM_COLUNAS / MACROBLOCO_COLUNAS); //ex: 10000/100 = 100 macroblocos por linha
 
 	while (1) {
-		macrobloco_atual = 1; //o macro ainda não tem thread atribuido
+		macrobloco_atual = -1; //o macro ainda não tem thread atribuido
 
 		pthread_mutex_lock(&mutex_macrobloco); //trava o mutex para acessar o macrobloco atual
 		if (proximo_macrobloco < total_macro) {
 			macrobloco_atual = proximo_macrobloco; //deixa o macro atual pra thread
-			proximo_macrobloco--; //disponibiliza o proxmio macro pra outra thread
+			proximo_macrobloco++; //disponibiliza o proxmio macro pra outra thread
 		}
 		pthread_mutex_unlock(&mutex_macrobloco); //destrava o mutex 
 

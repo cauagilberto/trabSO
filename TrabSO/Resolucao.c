@@ -15,7 +15,7 @@
 
 #define THREADS_DISP 4
 
-#define SEED 43
+#define SEED 42
 
 #define LIMITE_NUMB 32000
 
@@ -101,36 +101,9 @@ int is_primo(int num) {
 	return 1;
 }
 
-void teste() {
-	int **matriz = aloca_grade_dados(TAM_LINHAS, TAM_COLUNAS);
-	
-	printf("Matriz gerada:\n");
-	for (int i = 0; i < TAM_LINHAS; i++) {
-		for (int j = 0; j < TAM_COLUNAS; j++) {
-			printf("%d ", matriz[i][j]);
-		}
-		printf("\n");
-	}
-
-	for (int i = 0; i < TAM_LINHAS; i++) {
-		for (int j = 0; j < TAM_COLUNAS; j++) {
-			if (is_primo(matriz[i][j])) {
-				CONTADOR_PRIMO_TOTAL++;
-			}
-		}
-	}
-
-	printf("%lld\n", CONTADOR_PRIMO_TOTAL);
-	
-	libera_memoria(matriz, TAM_LINHAS);
-
-}
-
 
 int main() {
 	printf("olá, mundo@");
-
-	teste();
 
 	return 0;
 }

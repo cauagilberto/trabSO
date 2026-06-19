@@ -10,17 +10,17 @@
 #include <math.h>
 #include <time.h>
 
-#define TAM_LINHAS 10000
-#define TAM_COLUNAS 10000
+#define TAM_LINHAS 100
+#define TAM_COLUNAS 100
 
-#define THREADS_DISP 4
+#define THREADS_DISP 8
 
-#define SEED 42
+#define SEED 45
 
 #define LIMITE_NUMB 32000
 
-#define MACROBLOCO_COLUNAS 100
-#define MACROBLOCO_LINHAS 100
+#define MACROBLOCO_COLUNAS 10
+#define MACROBLOCO_LINHAS 10
 
 int CONT_PRIMOS_SERIAL = 0;
 int CONT_PRIMOS_PARALELO = 0;
@@ -30,21 +30,19 @@ double TEMPO_PARALELO;
 
 long long CONTADOR_PRIMO_TOTAL = 0;
 
-int MACROBLOCO_ATUAL = 0;
-
 int total_macro = 0;
 int proximo_macrobloco = 0;
 
 int **matriz;
 int total_macroblocos;
 int macrobloco_atual;
-pthread_mutex_t *mutex_macrobloco;
-pthread_mutex_t *mutex_indice;
+pthread_mutex_t mutex_macrobloco;
+pthread_mutex_t mutex_indice;
 
 
 int **gera_aloca_matriz(int linhas, int colunas) {
 	//aloca espaço para as linhas
-	matriz = (int **)malloc(linhas * sizeof(int *));
+	matriz = (int**)malloc(linhas * sizeof(int*));
 	if (matriz == NULL) {
 		//verifica se o espaço foi alocado
 		fprintf(stderr, "Erro ao alocar memória para as linhas da matriz.\n");
@@ -52,7 +50,7 @@ int **gera_aloca_matriz(int linhas, int colunas) {
 		}
 	for (int i = 0; i < linhas; i++) {
 		//aloca espaço para as colunas
-		(matriz)[i] = (int *)malloc(colunas * sizeof(int));
+		matriz[i] = (int *)malloc(colunas * sizeof(int));
 		if (matriz[i] == NULL) {
 			//verifica se o espaço foi alocado 
 			fprintf(stderr, "Erro ao alocar memória para as linhas da matriz.\n");
@@ -72,10 +70,10 @@ int **gera_aloca_matriz(int linhas, int colunas) {
 	return matriz;
 }
 
-void libera_memoria(int **matriz, int linhas) {
+void libera_memoria(int linhas) {
 
 	if (matriz == NULL) return;
-	for (int i = 0; i < TAM_LINHAS; i++) {
+	for (int i = 0; i < linhas; i++) {
 		if (matriz[i] != NULL) {
 			free(matriz[i]);
 		}
@@ -102,42 +100,46 @@ int is_primo(int num) {
 }
 
 void *trabalho_da_thread() {
-
-	//macrobloco_atual = MACROBLOCO_ATUAL;
+	int macrobloco_atual;
+	long long primos_locais = 0;
+	
 	//int primos_locais = 0;
 
-	int quantidade_macroblocos = (TAM_COLUNAS / MACROBLOCO_COLUNAS); //ex: 10000/100 = 100 macroblocos por linha
+	int quantidade_macroblocos = ((TAM_COLUNAS + MACROBLOCO_COLUNAS - 1)/ MACROBLOCO_COLUNAS); //ex: 10000/100 = 100 macroblocos por linha
 
 	while (1) {
-		macrobloco_atual = 1; //o macro ainda não tem thread atribuido
 
 		pthread_mutex_lock(&mutex_macrobloco); //trava o mutex para acessar o macrobloco atual
-		if (proximo_macrobloco < total_macro) {
-			macrobloco_atual = proximo_macrobloco; //deixa o macro atual pra thread
-			proximo_macrobloco--; //disponibiliza o proxmio macro pra outra thread
+		if (proximo_macrobloco >= total_macro) {
+			pthread_mutex_unlock(&mutex_macrobloco); //destrava o mutex 
+			break;
 		}
-		pthread_mutex_unlock(&mutex_macrobloco); //destrava o mutex 
+		macrobloco_atual = proximo_macrobloco; //deixa o macro atual pra thread
+		proximo_macrobloco++; //disponibiliza o proxmio macro pra outra thread
 
 		if (macrobloco_atual == -1) break; //significa que não tem mais macro
+
+		pthread_mutex_unlock(&mutex_macrobloco);
 
 		int linha_inicial = (macrobloco_atual / quantidade_macroblocos) * MACROBLOCO_LINHAS; //calcula a linha inicial do macrobloco
 		int linha_final = linha_inicial + MACROBLOCO_LINHAS; //calcula a linha final do macrobloco
 		if (linha_final > TAM_LINHAS) linha_final = TAM_LINHAS; //verifica se ta na borda da matriz
 		
 		int coluna_inicial = (macrobloco_atual % quantidade_macroblocos) * MACROBLOCO_COLUNAS; //calcula a coluna inicial do macrobloco
-		int coluna_final = linha_inicial + MACROBLOCO_COLUNAS; //calcula a linha coluna do macrobloco
+		int coluna_final = coluna_inicial + MACROBLOCO_COLUNAS; //calcula a linha coluna do macrobloco
 		if (coluna_final > TAM_COLUNAS) coluna_final = TAM_COLUNAS; //verifica se ta na borda da matriz
 
 		for (int i = linha_inicial; i < linha_final; i++) {
 			for (int j = coluna_inicial; j < coluna_final; j++) { //percorre o macrobloco
 				if(is_primo(matriz[i][j])){
-					pthread_mutex_lock(&mutex_indice);//trava o mutex para acessar o macrobloco atual
-					CONT_PRIMOS_PARALELO++; //incrementa o contador de primos paralelo
-					pthread_mutex_unlock(&mutex_indice);//destrava o mutex 
+					primos_locais++; 
 				}
 			}
 		}
 	}
+	pthread_mutex_lock(&mutex_indice);//trava o mutex para acessar o macrobloco atual
+	CONT_PRIMOS_PARALELO+=primos_locais; //incrementa o contador de primos paralelo
+	pthread_mutex_unlock(&mutex_indice);//destrava o mutex 
 
 	return NULL;
 }
@@ -165,7 +167,7 @@ void busca_paralela() {
 
 	clock_t fim = clock();
 
-	TEMPO_PARALELO = (fim - inicio) / CLOCKS_PER_SEC;
+	TEMPO_PARALELO = (double)(fim - inicio)/CLOCKS_PER_SEC;
 
 	pthread_mutex_destroy(&mutex_macrobloco); //destroi o mutex do macrobloco
 	pthread_mutex_destroy(&mutex_indice); //destroi o mutex do contador de primos paralelo
@@ -174,12 +176,12 @@ void busca_paralela() {
 
 int main() {
 	//printf("olá, mundo@");
-
+	gera_aloca_matriz(TAM_LINHAS, TAM_COLUNAS);
 	busca_paralela();
-
 	printf("Tempo gasto para busca paralela: %lf segundos\n", TEMPO_PARALELO);
 	printf("Quantidade macroblocos: %d\n", total_macro);
 	printf("Quantidade de primos encontrados: %lld\n", CONT_PRIMOS_PARALELO);
 
+	libera_memoria(TAM_LINHAS);
 	return 0;
 }

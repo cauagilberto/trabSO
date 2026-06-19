@@ -16,6 +16,8 @@ C:\Users\Pichau\source\repos\TrabSO\TrabSO\Resolucao.c(170,24): warning C4047: '
 C:\Users\Pichau\source\repos\TrabSO\TrabSO\Resolucao.c(170,24): warning C4024: 'pthread_mutex_destroy': tipos diferentes para parâmetro formal e real 1
 C:\Users\Pichau\source\repos\TrabSO\TrabSO\Resolucao.c(171,24): warning C4047: 'função': 'pthread_mutex_t *' difere em níveis de indireção de 'pthread_mutex_t **'
 C:\Users\Pichau\source\repos\TrabSO\TrabSO\Resolucao.c(171,24): warning C4024: 'pthread_mutex_destroy': tipos diferentes para parâmetro formal e real 1
+C:\Users\Pichau\source\repos\TrabSO\TrabSO\Resolucao.c(179,17): warning C4047: 'função': 'int **' difere em níveis de indireção de 'int ***'
+C:\Users\Pichau\source\repos\TrabSO\TrabSO\Resolucao.c(179,17): warning C4024: 'libera_memoria': tipos diferentes para parâmetro formal e real 1
 C:\Users\Pichau\source\repos\TrabSO\TrabSO\Resolucao.c(182,9): warning C4477: 'printf': a cadeia de formato '%lld' requer um argumento do tipo '__int64', mas um argumento variadic 1 tem o tipo 'int'
       C:\Users\Pichau\source\repos\TrabSO\TrabSO\Resolucao.c(182,9):
       considere usar '%d' na cadeia de formato

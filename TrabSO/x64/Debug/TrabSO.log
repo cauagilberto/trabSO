@@ -1,10 +1,1 @@
-﻿  Resolucao.c
-C:\Users\breno\source\repos\trabSO\TrabSO\Resolucao.c(139,24): warning C4244: '+=': conversão de '__int64' para 'int', possível perda de dados
-C:\Users\breno\source\repos\trabSO\TrabSO\Resolucao.c(159,37): warning C4113: 'void *(__cdecl *)()' difere em listas de parâmetro de 'void *(__cdecl *)(void *)'
-C:\Users\breno\source\repos\trabSO\TrabSO\Resolucao.c(205,10): warning C4477: 'printf': a cadeia de formato '%lld' requer um argumento do tipo '__int64', mas um argumento variadic 1 tem o tipo 'int'
-      C:\Users\breno\source\repos\trabSO\TrabSO\Resolucao.c(205,10):
-      considere usar '%d' na cadeia de formato
-      C:\Users\breno\source\repos\trabSO\TrabSO\Resolucao.c(205,10):
-      considere usar '%I32d' na cadeia de formato
-  
-  TrabSO.vcxproj -> C:\Users\breno\source\repos\trabSO\x64\Debug\TrabSO.exe
+﻿  TrabSO.vcxproj -> C:\Users\breno\source\repos\trabSO\x64\Debug\TrabSO.exe

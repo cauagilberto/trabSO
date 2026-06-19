@@ -1,0 +1,78 @@
+﻿################################################################################
+# Este arquivo .gitignore foi criado automaticamente pelo Microsoft(R) Visual Studio.
+################################################################################
+
+# Visual Studio / Visual C++
+.vs/
+*.vcxproj.user
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Bb]in/
+[Oo]bj/
+**/bin/
+**/obj/
+
+# Visual C++ specific
+*.pdb
+*.ilk
+*.idb
+*.ipch/
+*.iobj
+*.cache
+*.log
+*.sbr
+*.tlh
+*.tli
+*.exp
+
+# VS Code
+.vscode/
+
+# NuGet
+packages/
+*.nupkg
+.nuget/
+project.lock.json
+
+# Visual Studio test results
+TestResults/
+*.trx
+
+# Build artifacts and output folders
+x64/Debug/
+x64/Release/
+**/x64/Debug/
+**/x64/Release/
+
+# Rider and JetBrains
+.idea/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Coverage
+*.coverage
+*.coveragexml
+
+# Logs
+*.log
+
+# Ignore packages folder (NuGet) - restore on build
+packages/
+
+# Do NOT ignore .github/upgrades (workflow artifacts) — they are tracked by the modernization workflow
+
+# End of file

@@ -10,17 +10,17 @@
 #include <math.h>
 #include <time.h>
 
-#define TAM_LINHAS 100
-#define TAM_COLUNAS 100
+#define TAM_LINHAS 10000
+#define TAM_COLUNAS 10000
 
-#define THREADS_DISP 8
+#define THREADS_DISP 16
 
 #define SEED 45
 
 #define LIMITE_NUMB 32000
 
-#define MACROBLOCO_COLUNAS 10
-#define MACROBLOCO_LINHAS 10
+#define MACROBLOCO_COLUNAS 100
+#define MACROBLOCO_LINHAS 100
 
 int CONT_PRIMOS_SERIAL = 0;
 int CONT_PRIMOS_PARALELO = 0;
@@ -117,8 +117,6 @@ void *trabalho_da_thread() {
 		macrobloco_atual = proximo_macrobloco; //deixa o macro atual pra thread
 		proximo_macrobloco++; //disponibiliza o proxmio macro pra outra thread
 
-		if (macrobloco_atual == -1) break; //significa que não tem mais macro
-
 		pthread_mutex_unlock(&mutex_macrobloco);
 
 		int linha_inicial = (macrobloco_atual / quantidade_macroblocos) * MACROBLOCO_LINHAS; //calcula a linha inicial do macrobloco
@@ -178,10 +176,10 @@ int main() {
 	//printf("olá, mundo@");
 	gera_aloca_matriz(TAM_LINHAS, TAM_COLUNAS);
 	busca_paralela();
+	libera_memoria(TAM_LINHAS);
 	printf("Tempo gasto para busca paralela: %lf segundos\n", TEMPO_PARALELO);
 	printf("Quantidade macroblocos: %d\n", total_macro);
 	printf("Quantidade de primos encontrados: %lld\n", CONT_PRIMOS_PARALELO);
 
-	libera_memoria(TAM_LINHAS);
 	return 0;
 }

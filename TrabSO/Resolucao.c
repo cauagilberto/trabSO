@@ -172,14 +172,51 @@ void busca_paralela() {
 
 }
 
+void busca_serial() {
+	clock_t inicio = clock();
+	for (int i = 0; i < TAM_LINHAS; i++) {
+		for (int j = 0; j < TAM_COLUNAS; j++) {
+			if(is_primo(matriz[i][j])){
+				CONT_PRIMOS_SERIAL++;
+			}
+		}
+	}
+	clock_t fim = clock();
+	TEMPO_SERIAL = (double)(fim - inicio)/CLOCKS_PER_SEC;
+}
+
 int main() {
+	int escolha;
+
+	printf("Escolha o qual método você deseja encontrar os primos em uma matriz: \n");
+	printf("1. Busca Paralela\n");
+	printf("2. Busca Serial\n");
+	printf("3. Ambos e o speedup\n");
+	scanf("%d", &escolha);
+
+
 	//printf("olá, mundo@");
 	gera_aloca_matriz(TAM_LINHAS, TAM_COLUNAS);
-	busca_paralela();
+	
+	if (escolha == 1 || escolha == 3) {
+		busca_paralela();
+		printf("Tempo gasto para busca paralela: %lf segundos\n", TEMPO_PARALELO);
+		printf("Quantidade macroblocos: %d\n", total_macro);
+		printf("Quantidade de primos encontrados: %lld\n", CONT_PRIMOS_PARALELO);
+	}
+	
+	if (escolha == 2 || escolha == 3) {
+		busca_serial();
+		printf("Tempo gasto para busca serial: %lf segundos\n", TEMPO_SERIAL);
+		printf("Quantidade de primos encontrados: %d\n", CONT_PRIMOS_SERIAL);
+
+		if (escolha == 3) {
+			double speedup = TEMPO_SERIAL / TEMPO_PARALELO;
+			printf("Speedup: %lf\n", speedup);
+		}
+	}
+	
 	libera_memoria(TAM_LINHAS);
-	printf("Tempo gasto para busca paralela: %lf segundos\n", TEMPO_PARALELO);
-	printf("Quantidade macroblocos: %d\n", total_macro);
-	printf("Quantidade de primos encontrados: %lld\n", CONT_PRIMOS_PARALELO);
 
 	return 0;
 }

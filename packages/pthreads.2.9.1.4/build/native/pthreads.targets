@@ -79,6 +79,19 @@
       <AdditionalDependencies>$(MSBuildThisFileDirectory)../..//build/native/lib/v110\x64\Debug\dynamic\cdecl\libpthread.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
+
+  <!-- Fallback for newer PlatformToolset (e.g., v143): map to existing v110 libs when explicit mapping is not present -->
+  <ItemDefinitionGroup Label="fallback and x64 and Debug and dynamic and cdecl" Condition="'$(Platform.ToLower())' == 'x64' And ( $(Configuration.ToLower().IndexOf('debug')) &gt; -1 ) And '$(Linkage-pthreads.ToLower())' == 'dynamic' And '$(CallingConvention-pthreads.ToLower())' == 'cdecl'">
+    <Link>
+      <AdditionalDependencies>$(MSBuildThisFileDirectory)../..//build/native/lib/v110\x64\Debug\dynamic\cdecl\libpthread.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup Label="fallback and x64 and Release and dynamic and cdecl" Condition="'$(Platform.ToLower())' == 'x64' And ( $(Configuration.ToLower().IndexOf('debug')) == -1 ) And '$(Linkage-pthreads.ToLower())' == 'dynamic' And '$(CallingConvention-pthreads.ToLower())' == 'cdecl'">
+    <Link>
+      <AdditionalDependencies>$(MSBuildThisFileDirectory)../..//build/native/lib/v110\x64\Release\dynamic\cdecl\libpthread.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Label="v100 and Win32 and Release and dynamic and stdcall" Condition="'$(PlatformToolset.ToLower())' == 'v100' And '$(Platform.ToLower())' == 'win32' And ( $(Configuration.ToLower().IndexOf('debug')) == -1 ) And '$(Linkage-pthreads.ToLower())' == 'dynamic' And '$(CallingConvention-pthreads.ToLower())' == 'stdcall'">
     <Link>
       <AdditionalDependencies>$(MSBuildThisFileDirectory)../..//build/native/lib/v100\Win32\Release\dynamic\stdcall\libpthread-stdcall.lib;%(AdditionalDependencies)</AdditionalDependencies>

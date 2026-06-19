@@ -1,5 +1,5 @@
 #pragma once
-#pragma comment(lib, "pthreadVC2.lib")
+#pragma comment(lib, "libpthread.lib")
 #define _CRT_SECURE_NO_WARNINGS 1
 #define _WINSOCK_DEPRECATED_NO_WARNINGS 1
 #define HAVE_STRUCT_TIMESPEC 

@@ -126,10 +126,10 @@
     <ClCompile Include="Resolucao.c" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ClInclude Include="Resolucao.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Resolucao.h" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -291,9 +291,12 @@
     </Task>
   </UsingTask>
 
-  <!-- Fallback copy target for newer PlatformToolset (e.g., v143) to ensure libpthread.dll is available in $(TargetDir) -->
-  <Target Name="pthreads_redist_AfterBuild_fallback_x64" AfterTargets="pthreads_redist_AfterBuild">
-    <!-- Prefer Release dynamic cdecl build; do NOT copy Debug variant to target (prevents dependency on MSVCR110D) -->
-    <Copy SourceFiles="$(MSBuildThisFileDirectory)..\..//build/native/bin/v110\x64\Release\dynamic\cdecl\libpthread.dll" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" Condition="Exists('$(MSBuildThisFileDirectory)..\..//build/native/bin/v110\x64\Release\dynamic\cdecl\libpthread.dll')" />
+  <!-- Fallback copy target for newer PlatformToolset (e.g., v143) to ensure libpthread.dll is available in $(TargetDir)
+       Copy the Win32 or x64 Release variant according to the current Platform. Do NOT copy Debug variants. -->
+  <Target Name="pthreads_redist_AfterBuild_fallback" AfterTargets="pthreads_redist_AfterBuild">
+    <!-- Copy x64 Release when building x64 -->
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)..\..//build/native/bin/v110\x64\Release\dynamic\cdecl\libpthread.dll" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" Condition="'$(Platform)' == 'x64' And Exists('$(MSBuildThisFileDirectory)..\..//build/native/bin/v110\x64\Release\dynamic\cdecl\libpthread.dll')" />
+    <!-- Copy Win32 Release when building Win32 -->
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)..\..//build/native/bin/v110\Win32\Release\dynamic\cdecl\libpthread.dll" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" Condition="('$(Platform)' == 'Win32' Or '$(Platform)' == 'x86') And Exists('$(MSBuildThisFileDirectory)..\..//build/native/bin/v110\Win32\Release\dynamic\cdecl\libpthread.dll')" />
   </Target>
 </Project>

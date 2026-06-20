@@ -10,25 +10,23 @@
 #include <math.h>
 #include <time.h>
 
-#define TAM_LINHAS 10000
-#define TAM_COLUNAS 10000
+#define TAM_LINHAS 20000
+#define TAM_COLUNAS 20000
 
-#define THREADS_DISP 16
+#define THREADS_DISP 512
 
-#define SEED 45
+#define SEED 42
 
 #define LIMITE_NUMB 32000
 
-#define MACROBLOCO_COLUNAS 100
-#define MACROBLOCO_LINHAS 100
+#define MACROBLOCO_COLUNAS 1000
+#define MACROBLOCO_LINHAS 1000
 
 int CONT_PRIMOS_SERIAL = 0;
 int CONT_PRIMOS_PARALELO = 0;
 
 double TEMPO_SERIAL;
 double TEMPO_PARALELO;
-
-long long CONTADOR_PRIMO_TOTAL = 0;
 
 int total_macro = 0;
 int proximo_macrobloco = 0;
@@ -148,18 +146,21 @@ void busca_paralela() {
 	pthread_mutex_init(&mutex_indice, NULL); //inicializa o mutex do contador de primos paralelo
 
 	pthread_t threads[THREADS_DISP]; //declara as threads
-	int id_threads[THREADS_DISP]; //declara os ids das threads
+	int threads_criadas = 0;
 
 	total_macro = (TAM_LINHAS / MACROBLOCO_LINHAS) * (TAM_COLUNAS / MACROBLOCO_COLUNAS); //calcula a quantidade total de macroblocos
 
 	clock_t inicio = clock(); 
 
 	for (int i = 0; i < THREADS_DISP; i++) {
-		id_threads[i] = i; //atribui o id da thread
-		pthread_create(&threads[i], NULL, trabalho_da_thread, &id_threads[i]); //cria a thread
+		int contador_threads = pthread_create(&threads[i], NULL, trabalho_da_thread, NULL); //cria as threads e aloca a variavel para verificação
+
+		if (contador_threads != 0) break;
+
+		threads_criadas++;
 	}
 
-	for (int i = 0; i < THREADS_DISP; i++) {
+	for (int i = 0; i < threads_criadas; i++) {
 		pthread_join(threads[i], NULL); //espera as threads terminarem
 	}
 
@@ -188,10 +189,11 @@ void busca_serial() {
 int main() {
 	int escolha;
 
-	printf("Escolha o qual método você deseja encontrar os primos em uma matriz: \n");
+	printf("Escolha o qual método deseja encontrar os primos em uma matriz: \n");
 	printf("1. Busca Paralela\n");
 	printf("2. Busca Serial\n");
 	printf("3. Ambos e o speedup\n");
+	printf("Digite a opção desejada: ");
 	scanf("%d", &escolha);
 
 
@@ -202,7 +204,7 @@ int main() {
 		busca_paralela();
 		printf("Tempo gasto para busca paralela: %lf segundos\n", TEMPO_PARALELO);
 		printf("Quantidade macroblocos: %d\n", total_macro);
-		printf("Quantidade de primos encontrados: %lld\n", CONT_PRIMOS_PARALELO);
+		printf("Quantidade de primos encontrados: %d\n", CONT_PRIMOS_PARALELO);
 	}
 	
 	if (escolha == 2 || escolha == 3) {

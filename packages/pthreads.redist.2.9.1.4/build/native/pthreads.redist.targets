@@ -293,8 +293,7 @@
 
   <!-- Fallback copy target for newer PlatformToolset (e.g., v143) to ensure libpthread.dll is available in $(TargetDir) -->
   <Target Name="pthreads_redist_AfterBuild_fallback_x64" AfterTargets="pthreads_redist_AfterBuild">
-    <!-- Prefer Release dynamic cdecl build, fall back to Debug dynamic cdecl if present -->
+    <!-- Prefer Release dynamic cdecl build; do NOT copy Debug variant to target (prevents dependency on MSVCR110D) -->
     <Copy SourceFiles="$(MSBuildThisFileDirectory)..\..//build/native/bin/v110\x64\Release\dynamic\cdecl\libpthread.dll" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" Condition="Exists('$(MSBuildThisFileDirectory)..\..//build/native/bin/v110\x64\Release\dynamic\cdecl\libpthread.dll')" />
-    <Copy SourceFiles="$(MSBuildThisFileDirectory)..\..//build/native/bin/v110\x64\Debug\dynamic\cdecl\libpthread.dll" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" Condition="Exists('$(MSBuildThisFileDirectory)..\..//build/native/bin/v110\x64\Debug\dynamic\cdecl\libpthread.dll')" />
   </Target>
 </Project>

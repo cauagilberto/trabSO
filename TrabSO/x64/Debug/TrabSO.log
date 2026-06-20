@@ -1,1 +1,5 @@
-﻿  TrabSO.vcxproj -> C:\Users\breno\source\repos\trabSO\x64\Debug\TrabSO.exe
+﻿  Resolucao.c
+C:\Users\breno\source\repos\trabSO\TrabSO\Resolucao.c(121,33): warning C4244: '+=': conversão de '__int64' para 'int', possível perda de dados
+C:\Users\breno\source\repos\trabSO\TrabSO\Resolucao.c(126,33): warning C4244: '+=': conversão de '__int64' para 'int', possível perda de dados
+C:\Users\breno\source\repos\trabSO\TrabSO\Resolucao.c(151,47): warning C4113: 'void *(__cdecl *)()' difere em listas de parâmetro de 'void *(__cdecl *)(void *)'
+  TrabSO.vcxproj -> C:\Users\breno\source\repos\trabSO\x64\Debug\TrabSO.exe
